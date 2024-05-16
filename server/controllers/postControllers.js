@@ -38,7 +38,7 @@ const createPost = async (req, res, next) => {
                 }
                 // Find user and increase posts count by 1
                 const currentUser = await User.findById(req.user.id)
-                const userPostCount = currentUserpazzopalermo.posts + 1;
+                const userPostCount = currentUser?.posts + 1;
                 await User.findByIdAndUpdate(req.user.id, {posts: userPostCount})
 
                 res.status(201).json(newPost)
@@ -188,7 +188,7 @@ const removePost = async (req, res, next) => {
         return next(new HttpError("Post unavailable"))
     }
     const post = await Post.findById(postID);
-    const fileName = postpazzopalermo.thumbnail;
+    const fileName = post?.thumbnail;
     if(req.user.id == post.creator) {
         // delete thumbnail from uploads
     fs.unlink(path.join(__dirname, '..', 'uploads', fileName), async (err) => {
@@ -198,7 +198,7 @@ const removePost = async (req, res, next) => {
             await Post.findByIdAndDelete(postID)
             // Find user and reduce posts count by 1
             const currentUser = await User.findById(req.user.id)
-            const userPostCount = currentUserpazzopalermo.posts - 1;
+            const userPostCount = currentUser?.posts - 1;
             await User.findByIdAndUpdate(req.user.id, {posts: userPostCount})
             res.json("Post deleted")
         }
